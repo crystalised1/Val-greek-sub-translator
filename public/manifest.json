@@ -1,0 +1,13 @@
+{
+  "id": "org.val.greeksubs",
+  "version": "1.0.0",
+  "name": "Val's Greek Sub Translator",
+  "description": "Μεταφραστής υποτίτλων στα ελληνικά από γνωστά sites",
+  "resources": ["subtitles"],
+  "types": ["movie", "series"],
+  "catalogs": [],
+  "idPrefixes": ["tt"],
+  "behaviorHints": {
+    "configurationRequired": false
+  }
+}
