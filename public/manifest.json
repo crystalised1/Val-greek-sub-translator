@@ -1,20 +1,4 @@
 {
-<<<<<<< HEAD
-  "id": "org.val.greeksubs",
-  "version": "1.1.0",
-  "name": "Val's Greek Sub Translator",
-  "description": "Μεταφραστής υποτίτλων στα ελληνικά",
-  "logo": "https://placehold.co/128x128?text=Logo",
-  "background": "https://placehold.co/600x300?text=Background",
-  "resources": ["subtitles"],
-  "types": ["movie", "series"],
-  "catalogs": [],
-  "idPrefixes": ["tt"],
-  "behaviorHints": {
-    "configurationRequired": false
-  }
-}
-=======
     "id": "org.val.greeksubs",
     "version": "1.1.0",
     "name": "Val's Greek Sub Translator",
@@ -36,4 +20,3 @@
         "configurationRequired": false
     }
 }
->>>>>>> 7dad063 (Add all addon files)

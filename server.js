@@ -9,11 +9,8 @@ const builder = new addonBuilder({
   version: '1.1.0',
   name: "Val's Greek Sub Translator",
   description: "Μεταφραστής υποτίτλων στα ελληνικά",
-<<<<<<< HEAD
-=======
   logo: "https://i.imgur.com/GHxDNia.png",
   background: "https://placehold.co/600x300?text=Background",
->>>>>>> 7dad063 (Add all addon files)
   resources: ['subtitles'],
   types: ['movie', 'series'],
   idPrefixes: ['tt'],
@@ -41,10 +38,6 @@ async function fetchGreekFromSubseeker(imdbId) {
   }
 }
 
-<<<<<<< HEAD
-/* Fallback stubs για άλλες πηγές */
-=======
->>>>>>> 7dad063 (Add all addon files)
 async function fetchGreekFromOpenSubtitles(imdbId) { return null; }
 async function fetchGreekFromSubscene(imdbId) { return null; }
 async function fetchGreekFromYIFY(imdbId) { return null; }
@@ -126,9 +119,5 @@ builder.defineSubtitlesHandler(async ({ id }) => {
   };
 });
 
-<<<<<<< HEAD
-// ✅ Εκκίνηση HTTP server
-=======
->>>>>>> 7dad063 (Add all addon files)
 serveHTTP(builder.getInterface(), { port: 7000 });
 console.log('Addon server τρέχει στο http://localhost:7000');
