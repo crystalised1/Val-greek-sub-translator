@@ -1,0 +1,222 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Dark tech background -->
+    <radialGradient id="techBg" cx="50%" cy="50%" r="80%">
+      <stop offset="0%" style="stop-color:#0a0a0a;stop-opacity:1"/>
+      <stop offset="50%" style="stop-color:#1a1a1a;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#000000;stop-opacity:1"/>
+    </radialGradient>
+    
+    <!-- Static holographic text gradient -->
+    <linearGradient id="holographicText" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff0080;stop-opacity:1"/>
+      <stop offset="20%" style="stop-color:#ff4000;stop-opacity:1"/>
+      <stop offset="40%" style="stop-color:#ffff00;stop-opacity:1"/>
+      <stop offset="60%" style="stop-color:#00ff80;stop-opacity:1"/>
+      <stop offset="80%" style="stop-color:#0080ff;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#8000ff;stop-opacity:1"/>
+    </linearGradient>
+    
+    <!-- Static iridescent gradient -->
+    <linearGradient id="iridescent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00ffff;stop-opacity:0.9"/>
+      <stop offset="33%" style="stop-color:#ff0080;stop-opacity:0.9"/>
+      <stop offset="66%" style="stop-color:#ffff00;stop-opacity:0.9"/>
+      <stop offset="100%" style="stop-color:#00ff80;stop-opacity:0.9"/>
+    </linearGradient>
+    
+    <!-- Static cyan-magenta gradient -->
+    <linearGradient id="cyanMagenta" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00ffff;stop-opacity:1"/>
+      <stop offset="50%" style="stop-color:#ff0080;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#8000ff;stop-opacity:1"/>
+    </linearGradient>
+    
+    <!-- Greek flag colors - solid and clear -->
+    <linearGradient id="greekBlue" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#004c9a;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#0066cc;stop-opacity:1"/>
+    </linearGradient>
+    
+    <!-- Enhanced white stripe gradient -->
+    <linearGradient id="whiteStripe" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#f0f0f0;stop-opacity:1"/>
+      <stop offset="50%" style="stop-color:#ffffff;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#f0f0f0;stop-opacity:1"/>
+    </linearGradient>
+    
+    <!-- Tech grid pattern -->
+    <pattern id="techGrid" patternUnits="userSpaceOnUse" width="20" height="20">
+      <rect width="20" height="20" fill="none"/>
+      <g stroke="#00ffff" stroke-width="0.2" opacity="0.3">
+        <path d="M0 10h20 M10 0v20"/>
+        <circle cx="10" cy="10" r="1" fill="#00ffff" opacity="0.4"/>
+      </g>
+    </pattern>
+    
+    <!-- Holographic glow -->
+    <filter id="holoGlow">
+      <feGaussianBlur stdDeviation="2" result="glow"/>
+      <feColorMatrix in="glow" values="1.5 0 0 0 0  0 1.5 0 0 0  0 0 1.5 0 0  0 0 0 1 0"/>
+      <feMerge>
+        <feMergeNode in="glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Intense glow for main text -->
+    <filter id="intenseGlow">
+      <feGaussianBlur stdDeviation="3" result="glow"/>
+      <feColorMatrix in="glow" values="2 0 0 0 0  0 2 0 0 0  0 0 2 0 0  0 0 0 1 0"/>
+      <feMerge>
+        <feMergeNode in="glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Dark tech background -->
+  <rect width="200" height="200" fill="url(#techBg)" rx="24"/>
+  
+  <!-- Tech grid overlay -->
+  <rect width="200" height="200" fill="url(#techGrid)" rx="24" opacity="0.6"/>
+  
+  <!-- Background geometric pattern -->
+  <g opacity="0.2" stroke="url(#iridescent)" stroke-width="0.5" fill="none">
+    <!-- Diagonal lines -->
+    <path d="M40 40 L160 160 M160 40 L40 160"/>
+    <!-- Hexagonal pattern -->
+    <polygon points="100,30 120,40 120,60 100,70 80,60 80,40"/>
+    <polygon points="100,130 120,140 120,160 100,170 80,160 80,140"/>
+    <polygon points="60,80 80,90 80,110 60,120 40,110 40,90"/>
+    <polygon points="140,80 160,90 160,110 140,120 120,110 120,90"/>
+  </g>
+  
+  <!-- Static corner tech elements -->
+  <g opacity="0.8">
+    <!-- Top left -->
+    <g transform="translate(15 15)">
+      <rect width="20" height="1" fill="url(#cyanMagenta)" rx="0.5"/>
+      <rect width="1" height="20" fill="url(#cyanMagenta)" rx="0.5"/>
+      <circle cx="10" cy="10" r="2" fill="url(#cyanMagenta)" opacity="0.7"/>
+    </g>
+    
+    <!-- Top right -->
+    <g transform="translate(165 15)">
+      <rect width="20" height="1" fill="url(#cyanMagenta)" rx="0.5"/>
+      <rect x="19" width="1" height="20" fill="url(#cyanMagenta)" rx="0.5"/>
+      <circle cx="10" cy="10" r="2" fill="url(#cyanMagenta)" opacity="0.7"/>
+    </g>
+    
+    <!-- Bottom left -->
+    <g transform="translate(15 165)">
+      <rect width="20" height="1" y="19" fill="url(#cyanMagenta)" rx="0.5"/>
+      <rect width="1" height="20" fill="url(#cyanMagenta)" rx="0.5"/>
+      <circle cx="10" cy="10" r="2" fill="url(#cyanMagenta)" opacity="0.7"/>
+    </g>
+    
+    <!-- Bottom right -->
+    <g transform="translate(165 165)">
+      <rect width="20" height="1" y="19" fill="url(#cyanMagenta)" rx="0.5"/>
+      <rect x="19" width="1" height="20" fill="url(#cyanMagenta)" rx="0.5"/>
+      <circle cx="10" cy="10" r="2" fill="url(#cyanMagenta)" opacity="0.7"/>
+    </g>
+  </g>
+  
+  <!-- Main text positioned lower to avoid flag -->
+  <g text-anchor="middle">
+    <text x="100" y="125" 
+          font-family="'Orbitron', 'Exo 2', 'Roboto Mono', monospace" 
+          font-size="28" 
+          font-weight="700" 
+          fill="url(#holographicText)" 
+          filter="url(#intenseGlow)"
+          letter-spacing="1px">
+      Val's Greek
+    </text>
+    
+    <!-- Static holographic line -->
+    <rect x="50" y="133" width="100" height="1.5" fill="url(#cyanMagenta)" rx="0.75" opacity="0.9"/>
+    
+    <!-- Iridescent subtitle -->
+    <text x="100" y="152" 
+          font-family="'Exo 2', 'Roboto', sans-serif" 
+          font-size="12" 
+          font-weight="400" 
+          fill="url(#iridescent)" 
+          filter="url(#holoGlow)"
+          letter-spacing="3px">
+      TRANSLATOR
+    </text>
+  </g>
+  
+  <!-- Improved Greek flag -->
+  <g transform="translate(125 18)">
+    <!-- Flag shadow for depth -->
+    <rect width="56" height="38" x="2" y="2" fill="#000000" opacity="0.3" rx="3"/>
+    
+    <!-- Main flag background (μπλε βάση) -->
+    <rect width="56" height="38" fill="url(#greekBlue)" rx="3"/>
+    
+    <!-- White stripes (4 λευκές ρίγες) -->
+    <g fill="url(#whiteStripe)">
+      <rect width="56" height="4.2" y="4.2"/>      <!-- 1η λευκή -->
+      <rect width="56" height="4.2" y="12.6"/>     <!-- 2η λευκή -->
+      <rect width="56" height="4.2" y="21"/>       <!-- 3η λευκή -->
+      <rect width="56" height="4.2" y="29.4"/>     <!-- 4η λευκή -->
+    </g>
+    
+    <!-- Blue canton (τετράγωνο 21x21 που καλύπτει τις πρώτες 5 ρίγες) -->
+    <rect width="21" height="21" fill="url(#greekBlue)"/>
+    
+    <!-- White cross stripes inside canton -->
+    <rect width="21" height="4.2" y="8.4" fill="url(#whiteStripe)"/>    <!-- οριζόντια -->
+    <rect width="4.2" height="21" x="8.4" fill="url(#whiteStripe)"/>     <!-- κάθετη -->
+    
+    <!-- Flag frame with holographic effect (λεπτότερο πλαίσιο) -->
+    <rect width="56" height="38" fill="none" stroke="url(#cyanMagenta)" stroke-width="1" rx="3" 
+          opacity="0.7" filter="url(#holoGlow)"/>
+    
+    <!-- Inner subtle frame -->
+    <rect width="54" height="36" x="1" y="1" fill="none" stroke="#ffffff" stroke-width="0.2" rx="2.5" 
+          opacity="0.3"/>
+    
+    <!-- Flag highlight for 3D effect -->
+    <rect width="54" height="1" x="1" y="1" fill="#ffffff" opacity="0.15" rx="2"/>
+  </g>
+  
+  <!-- Static holographic data visualization -->
+  <g transform="translate(60 165)">
+    <!-- Static data streams -->
+    <rect width="70" height="2" fill="url(#cyanMagenta)" rx="1" opacity="0.9"/>
+    <rect width="85" height="1.5" y="5" fill="url(#iridescent)" rx="0.75" opacity="0.8"/>
+    <rect width="55" height="1" y="9" fill="url(#holographicText)" rx="0.5" opacity="0.7"/>
+    
+    <!-- Static data points -->
+    <circle cx="75" cy="1" r="1.5" fill="#ffffff" opacity="0.9" filter="url(#holoGlow)"/>
+    <circle cx="90" cy="5.75" r="1.2" fill="#00ffff" opacity="0.8" filter="url(#holoGlow)"/>
+    <circle cx="60" cy="9.5" r="1" fill="#ff0080" opacity="0.7" filter="url(#holoGlow)"/>
+  </g>
+  
+  <!-- Static tech grid lines -->
+  <g stroke="url(#cyanMagenta)" stroke-width="0.3" opacity="0.3" fill="none">
+    <path d="M0 70h200 M0 130h200"/>
+    <path d="M70 0v200 M130 0v200"/>
+  </g>
+  
+  <!-- Static holographic border -->
+  <rect width="194" height="194" x="3" y="3" fill="none" stroke="url(#cyanMagenta)" 
+        stroke-width="2" rx="21" opacity="0.9" filter="url(#holoGlow)"/>
+  
+  <!-- Inner static accent -->
+  <rect width="186" height="186" x="7" y="7" fill="none" stroke="url(#iridescent)" 
+        stroke-width="0.5" rx="17" opacity="0.5"/>
+  
+  <!-- Static floating holographic particles -->
+  <g opacity="0.6">
+    <circle cx="50" cy="45" r="1" fill="url(#cyanMagenta)"/>
+    <circle cx="150" cy="65" r="0.8" fill="url(#iridescent)"/>
+    <circle cx="40" cy="180" r="1.2" fill="url(#holographicText)"/>
+    <circle cx="160" cy="175" r="0.9" fill="url(#cyanMagenta)"/>
+  </g>
+</svg>
