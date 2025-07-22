@@ -1,8 +1,10 @@
-const { addonBuilder } = require('stremio-addon-sdk');
+const { addonBuilder, serveHTTP } = require('stremio-addon-sdk');
 const axios = require('axios');
 const cheerio = require('cheerio');
 const translate = require('@vitalets/google-translate-api');
 const NodeCache = require('node-cache');
+
+console.log('Ξεκινάει ο addon server...');
 
 const builder = new addonBuilder({
   id: 'org.val.greeksubs',
@@ -33,7 +35,8 @@ async function fetchGreekFromSubseeker(imdbId) {
       }
     });
     return links.length ? links[0] : null;
-  } catch {
+  } catch (error) {
+    console.error('fetchGreekFromSubseeker error:', error.message);
     return null;
   }
 }
@@ -51,19 +54,48 @@ async function fetchEnglishSub(imdbId) {
       }
     });
     return links.length ? links[0] : null;
-  } catch {
+  } catch (error) {
+    console.error('fetchEnglishSub error:', error.message);
+    return null;
+  }
+}
+
+async function autoTranslateSubtitle(subUrl) {
+  try {
+    const { data } = await axios.get(subUrl);
+    const lines = data.split('\n');
+    const out = [];
+    for (let line of lines) {
+      if (/^\d+$/.test(line) || /-->/g.test(line) || line.trim() === '') {
+        out.push(line);
+      } else {
+        try {
+          const { text } = await translate(line, { to: 'el' });
+          out.push(text);
+        } catch {
+          out.push(line);
+        }
+      }
+    }
+    return out.join('\n');
+  } catch (error) {
+    console.error('autoTranslateSubtitle error:', error.message);
     return null;
   }
 }
 
 builder.defineSubtitlesHandler(async ({ id }) => {
+  console.log(`Αίτημα για υπότιτλους με id: ${id}`);
+
   let subs = [];
   let auto = false;
   const cached = cache.get(id);
-  if (cached) return { subtitles: cached };
+  if (cached) {
+    console.log('Επιστροφή από cache');
+    return { subtitles: cached };
+  }
 
   let greekUrl = await fetchGreekFromSubseeker(id);
-  if (!greekUrl) greekUrl = null;
 
   if (greekUrl) {
     subs.push({ lang: 'el', url: greekUrl, id: 'val-greek-original', name: 'Greek (Original)' });
@@ -82,4 +114,7 @@ builder.defineSubtitlesHandler(async ({ id }) => {
   };
 });
 
-module.exports = builder.getInterface();
+const port = process.env.PORT || 7000;
+serveHTTP(builder.getInterface(), { port });
+
+console.log(`Addon server τρέχει στο http://localhost:${port}`);
