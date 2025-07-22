@@ -12,5 +12,5 @@
   "behaviorHints": {
     "configurationRequired": false
   },
-  "api": "https://val-greek-sub-translator.vercel.app"
+  "api": "https://val-greek-sub-translator.vercel.app/api/addon"
 }
