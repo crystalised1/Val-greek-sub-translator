@@ -9,7 +9,7 @@
     "axios": "^1.0.0",
     "cheerio": "^1.0.0-rc.12",
     "node-cache": "^5.1.2",
-    "stremio-addon-sdk": "^1.7.0",
+    "stremio-addon-sdk": "^1.6.10",
     "@vitalets/google-translate-api": "^8.0.0"
   }
 }
