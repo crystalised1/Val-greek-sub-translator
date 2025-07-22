@@ -1,4 +1,4 @@
-const { addonBuilder, serveHTTP } = require('stremio-addon-sdk');
+const { addonBuilder } = require('stremio-addon-sdk');
 const axios = require('axios');
 const cheerio = require('cheerio');
 const translate = require('@vitalets/google-translate-api');
@@ -38,14 +38,6 @@ async function fetchGreekFromSubseeker(imdbId) {
   }
 }
 
-async function fetchGreekFromOpenSubtitles(imdbId) { return null; }
-async function fetchGreekFromSubscene(imdbId) { return null; }
-async function fetchGreekFromYIFY(imdbId) { return null; }
-async function fetchGreekFromPodnapisi(imdbId) { return null; }
-async function fetchGreekFromTVsubs(imdbId) { return null; }
-async function fetchGreekFromDownSub(imdbId) { return null; }
-async function fetchGreekFromMovieSubtitles(imdbId) { return null; }
-
 async function fetchEnglishSub(imdbId) {
   try {
     const url = `https://www.subseeker.com/movie/${imdbId}`;
@@ -64,29 +56,6 @@ async function fetchEnglishSub(imdbId) {
   }
 }
 
-async function autoTranslateSubtitle(subUrl) {
-  try {
-    const { data } = await axios.get(subUrl);
-    const lines = data.split('\n');
-    const out = [];
-    for (let line of lines) {
-      if (/^\d+$/.test(line) || /-->/g.test(line) || line.trim() === '') {
-        out.push(line);
-      } else {
-        try {
-          const { text } = await translate(line, { to: 'el' });
-          out.push(text);
-        } catch {
-          out.push(line);
-        }
-      }
-    }
-    return out.join('\n');
-  } catch {
-    return null;
-  }
-}
-
 builder.defineSubtitlesHandler(async ({ id }) => {
   let subs = [];
   let auto = false;
@@ -94,13 +63,7 @@ builder.defineSubtitlesHandler(async ({ id }) => {
   if (cached) return { subtitles: cached };
 
   let greekUrl = await fetchGreekFromSubseeker(id);
-  if (!greekUrl) greekUrl = await fetchGreekFromOpenSubtitles(id);
-  if (!greekUrl) greekUrl = await fetchGreekFromSubscene(id);
-  if (!greekUrl) greekUrl = await fetchGreekFromYIFY(id);
-  if (!greekUrl) greekUrl = await fetchGreekFromPodnapisi(id);
-  if (!greekUrl) greekUrl = await fetchGreekFromTVsubs(id);
-  if (!greekUrl) greekUrl = await fetchGreekFromDownSub(id);
-  if (!greekUrl) greekUrl = await fetchGreekFromMovieSubtitles(id);
+  if (!greekUrl) greekUrl = null;
 
   if (greekUrl) {
     subs.push({ lang: 'el', url: greekUrl, id: 'val-greek-original', name: 'Greek (Original)' });
@@ -119,6 +82,4 @@ builder.defineSubtitlesHandler(async ({ id }) => {
   };
 });
 
-const port = process.env.PORT || 7000;
-serveHTTP(builder.getInterface(), { port });
-console.log(`Addon server τρέχει στο http://localhost:${port}`);
+module.exports = builder.getInterface();
