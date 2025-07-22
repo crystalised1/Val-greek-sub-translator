@@ -1,4 +1,4 @@
-const { addonBuilder } = require('stremio-addon-sdk');
+const { addonBuilder, serveHTTP } = require('stremio-addon-sdk');
 const axios = require('axios');
 const cheerio = require('cheerio');
 const translate = require('@vitalets/google-translate-api');
@@ -33,7 +33,7 @@ async function fetchGreekFromSubseeker(imdbId) {
       }
     });
     return links.length ? links[0] : null;
-  } catch {
+  } catch (error) {
     return null;
   }
 }
@@ -51,7 +51,7 @@ async function fetchEnglishSub(imdbId) {
       }
     });
     return links.length ? links[0] : null;
-  } catch {
+  } catch (error) {
     return null;
   }
 }
@@ -74,7 +74,7 @@ async function autoTranslateSubtitle(subUrl) {
       }
     }
     return out.join('\n');
-  } catch {
+  } catch (error) {
     return null;
   }
 }
@@ -103,18 +103,5 @@ builder.defineSubtitlesHandler(async ({ id }) => {
   };
 });
 
-module.exports = async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
-  }
-  try {
-    const response = await builder.getInterface()(req);
-    res.setHeader('Content-Type', 'application/json');
-    res.status(200).send(response);
-  } catch (err) {
-    res.status(500).send({ error: err.message });
-  }
-};
+const port = process.env.PORT || 7000;
+serveHTTP(builder.getInterface(), { port });
