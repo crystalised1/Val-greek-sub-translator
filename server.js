@@ -115,6 +115,12 @@ builder.defineSubtitlesHandler(async ({ id }) => {
 });
 
 const port = process.env.PORT || 7000;
-serveHTTP(builder.getInterface(), { port });
+serveHTTP(builder.getInterface(), {
+  port,
+  onResponse: (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  }
+});
 
 console.log(`Addon server τρέχει στο http://localhost:${port}`);
