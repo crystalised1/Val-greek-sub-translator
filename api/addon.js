@@ -56,29 +56,6 @@ async function fetchEnglishSub(imdbId) {
   }
 }
 
-async function autoTranslateSubtitle(subUrl) {
-  try {
-    const { data } = await axios.get(subUrl);
-    const lines = data.split('\n');
-    const out = [];
-    for (let line of lines) {
-      if (/^\d+$/.test(line) || /-->/g.test(line) || line.trim() === '') {
-        out.push(line);
-      } else {
-        try {
-          const { text } = await translate(line, { to: 'el' });
-          out.push(text);
-        } catch {
-          out.push(line);
-        }
-      }
-    }
-    return out.join('\n');
-  } catch (error) {
-    return null;
-  }
-}
-
 builder.defineSubtitlesHandler(async ({ id }) => {
   let subs = [];
   let auto = false;
@@ -103,5 +80,6 @@ builder.defineSubtitlesHandler(async ({ id }) => {
   };
 });
 
-const port = process.env.PORT || 7000;
-serveHTTP(builder.getInterface(), { port });
+module.exports = (req, res) => {
+  serveHTTP(builder.getInterface())(req, res);
+};
