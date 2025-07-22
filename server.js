@@ -119,5 +119,6 @@ builder.defineSubtitlesHandler(async ({ id }) => {
   };
 });
 
-serveHTTP(builder.getInterface(), { port: 7000 });
-console.log('Addon server τρέχει στο http://localhost:7000');
+const port = process.env.PORT || 7000;
+serveHTTP(builder.getInterface(), { port });
+console.log(`Addon server τρέχει στο http://localhost:${port}`);
