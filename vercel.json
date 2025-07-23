@@ -8,8 +8,8 @@
   ],
   "routes": [
     {
-      "src": "/api/addon",
-      "dest": "/api/addon.js"
+      "src": "/(.*)",
+      "dest": "api/addon.js"
     }
   ]
 }
