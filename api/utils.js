@@ -8,18 +8,26 @@ const translatedCache = new NodeCache({ stdTTL: 3600 });
 
 async function fetchSubseekerSubs(imdbId, lang) {
   try {
-    const url = `https://www.subseeker.com/movie/${imdbId}`;
+    const baseUrl = `https://www.subseeker.com`;
+    const url = `${baseUrl}/movie/${imdbId}`;
     const { data } = await axios.get(url);
     const $ = cheerio.load(data);
     let links = [];
+
     $('a[href$=".srt"]').each((i, el) => {
       const subtitleLang = $(el).closest('tr').find('img[alt]').attr('alt');
       if (subtitleLang && subtitleLang.toLowerCase().includes(lang)) {
-        links.push($(el).attr('href'));
+        const relativeHref = $(el).attr('href');
+        const fullUrl = `${baseUrl}${relativeHref}`;
+        links.push(fullUrl);
       }
     });
+
+    console.log('Found subtitle links:', links);
     return links.length ? links[0] : null;
-  } catch {
+
+  } catch (err) {
+    console.error('Error fetching subtitles:', err.message);
     return null;
   }
 }
