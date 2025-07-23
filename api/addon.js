@@ -1,3 +1,4 @@
+const http = require('http');
 const { addonBuilder } = require('stremio-addon-sdk');
 const axios = require('axios');
 const cheerio = require('cheerio');
@@ -33,7 +34,7 @@ async function fetchGreekFromSubseeker(imdbId) {
       }
     });
     return links.length ? links[0] : null;
-  } catch (error) {
+  } catch {
     return null;
   }
 }
@@ -51,33 +52,4 @@ async function fetchEnglishSub(imdbId) {
       }
     });
     return links.length ? links[0] : null;
-  } catch (error) {
-    return null;
   }
-}
-
-builder.defineSubtitlesHandler(async ({ id }) => {
-  let subs = [];
-  let auto = false;
-  const cached = cache.get(id);
-  if (cached) {
-    return { subtitles: cached };
-  }
-  let greekUrl = await fetchGreekFromSubseeker(id);
-  if (greekUrl) {
-    subs.push({ lang: 'el', url: greekUrl, id: 'val-greek-original', name: 'Greek (Original)' });
-  } else {
-    const eng = await fetchEnglishSub(id);
-    if (eng) {
-      auto = true;
-      subs.push({ lang: 'el', url: eng, id: 'val-greek-auto', name: 'Greek (Auto-translated)' });
-    }
-  }
-  cache.set(id, subs);
-  return {
-    subtitles: subs,
-    behaviorHints: auto ? { notice: 'Μετάφραση με Google Translate' } : {}
-  };
-});
-
-module.exports = builder.getInterface();
