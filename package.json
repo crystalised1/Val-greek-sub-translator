@@ -6,10 +6,11 @@
     "start": "node api/addon.js"
   },
   "dependencies": {
+    "@vitalets/google-translate-api": "^9.2.1",
     "axios": "^1.4.0",
     "cheerio": "^1.0.0-rc.12",
+    "express": "^4.18.2",
     "node-cache": "^5.1.2",
-    "@vitalets/google-translate-api": "^8.0.0",
-    "stremio-addon-sdk": "^2.5.0"
+    "stremio-addon-sdk": "^0.7.1"
   }
 }
