@@ -34,6 +34,7 @@ async function fetchGreekFromSubseeker(imdbId) {
     });
     return links.length ? links[0] : null;
   } catch (error) {
+    console.error("Error fetching Greek subtitles:", error);
     return null;
   }
 }
@@ -52,6 +53,7 @@ async function fetchEnglishSub(imdbId) {
     });
     return links.length ? links[0] : null;
   } catch (error) {
+    console.error("Error fetching English subtitles:", error);
     return null;
   }
 }
@@ -63,7 +65,8 @@ builder.defineSubtitlesHandler(async ({ id }) => {
   if (cached) {
     return { subtitles: cached };
   }
-  let greekUrl = await fetchGreekFromSubseeker(id);
+
+  const greekUrl = await fetchGreekFromSubseeker(id);
   if (greekUrl) {
     subs.push({ lang: 'el', url: greekUrl, id: 'val-greek-original', name: 'Greek (Original)' });
   } else {
@@ -73,6 +76,7 @@ builder.defineSubtitlesHandler(async ({ id }) => {
       subs.push({ lang: 'el', url: eng, id: 'val-greek-auto', name: 'Greek (Auto-translated)' });
     }
   }
+
   cache.set(id, subs);
   return {
     subtitles: subs,
@@ -80,6 +84,6 @@ builder.defineSubtitlesHandler(async ({ id }) => {
   };
 });
 
-module.exports = (req, res) => {
-  serveHTTP(builder.getInterface())(req, res);
+module.exports = async (req, res) => {
+  return serveHTTP(builder.getInterface())(req, res);
 };
