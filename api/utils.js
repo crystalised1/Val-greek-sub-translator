@@ -1,7 +1,7 @@
-const axios = require('axios');
-const cheerio = require('cheerio');
-const translate = require('@vitalets/google-translate-api');
-const NodeCache = require('node-cache');
+import axios from 'axios';
+import cheerio from 'cheerio';
+import translate from '@vitalets/google-translate-api';
+import NodeCache from 'node-cache';
 
 const subsCache = new NodeCache({ stdTTL: 3600 });
 const translatedCache = new NodeCache({ stdTTL: 3600 });
@@ -53,7 +53,7 @@ async function translateSrtContent(srtContent) {
   return translatedLines.join('\n');
 }
 
-module.exports = {
+export {
   subsCache,
   translatedCache,
   fetchSubseekerSubs,
