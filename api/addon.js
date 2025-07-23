@@ -1,8 +1,11 @@
-const { addonBuilder, serveHTTP } = require('stremio-addon-sdk');
+const express = require('express');
+const { addonBuilder } = require('stremio-addon-sdk');
 const axios = require('axios');
 const cheerio = require('cheerio');
 const translate = require('@vitalets/google-translate-api');
 const NodeCache = require('node-cache');
+
+const app = express();
 
 const builder = new addonBuilder({
   id: 'org.val.greeksubs',
@@ -85,8 +88,7 @@ builder.defineSubtitlesHandler(async ({ id }) => {
   const englishUrl = await fetchSubseekerSubs(id, 'english');
   if (!englishUrl) return { subtitles: [] };
 
-  let translatedUrl = translatedCache.get(id);
-  if (!translatedUrl) {
+  if (!translatedCache.has(id)) {
     const englishSrt = await downloadSrt(englishUrl);
     if (!englishSrt) return { subtitles: [] };
 
@@ -96,7 +98,7 @@ builder.defineSubtitlesHandler(async ({ id }) => {
     translatedCache.set(id, translatedSrt);
   }
 
-  translatedUrl = `/translated/${id}.srt`;
+  const translatedUrl = `http://localhost:${process.env.PORT || 7000}/translated/${id}.srt`;
 
   subs.push({ id: 'el-auto', lang: 'el', name: 'Greek (Auto-translated)', url: translatedUrl });
   subsCache.set(id, subs);
@@ -104,30 +106,30 @@ builder.defineSubtitlesHandler(async ({ id }) => {
   return { subtitles: subs };
 });
 
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
+
+app.get('/manifest.json', (req, res) => {
+  res.json(builder.getManifest());
+});
+
+app.get('/subtitles/:id.srt', (req, res) => {
+  const id = req.params.id;
+  const srt = translatedCache.get(id);
+  if (srt) {
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.status(200).send(srt);
+  } else {
+    res.status(404).send('Subtitle not found');
+  }
+});
+
+app.use(builder.getInterface());
+
 const port = process.env.PORT || 7000;
-
-const server = serveHTTP(builder.getInterface(), {
-  port,
-  onRequest: (req, res) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  }
+app.listen(port, () => {
+  console.log(`Addon server running at http://localhost:${port}`);
 });
-
-server.on('request', async (req, res) => {
-  if (req.url.startsWith('/translated/') && req.url.endsWith('.srt')) {
-    const id = req.url.split('/')[2].replace('.srt', '');
-    const srt = translatedCache.get(id);
-    if (srt) {
-      res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-      res.writeHead(200);
-      res.end(srt);
-      return;
-    }
-    res.writeHead(404);
-    res.end('Subtitle not found');
-    return;
-  }
-});
-
-console.log(`Addon server τρέχει στο http://localhost:${port}`);
