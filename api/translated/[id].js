@@ -1,6 +1,10 @@
-import { fetchSubseekerSubs, downloadSrt, translateSrtContent, subsCache, translatedCache } from '../utils.js';
-
-
+import {
+  fetchSubseekerSubs,
+  downloadSrt,
+  translateSrtContent,
+  subsCache,
+  translatedCache
+} from '../utils.js';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -38,7 +42,6 @@ export default async function handler(req, res) {
 
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
     return res.status(200).send(translated);
-
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: 'Server error' });
