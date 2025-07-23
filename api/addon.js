@@ -1,4 +1,4 @@
-const { addonBuilder, serveHTTP } = require('stremio-addon-sdk');
+const { addonBuilder } = require('stremio-addon-sdk');
 const axios = require('axios');
 const cheerio = require('cheerio');
 const translate = require('@vitalets/google-translate-api');
@@ -34,7 +34,6 @@ async function fetchGreekFromSubseeker(imdbId) {
     });
     return links.length ? links[0] : null;
   } catch (error) {
-    console.error("Error fetching Greek subtitles:", error);
     return null;
   }
 }
@@ -53,7 +52,6 @@ async function fetchEnglishSub(imdbId) {
     });
     return links.length ? links[0] : null;
   } catch (error) {
-    console.error("Error fetching English subtitles:", error);
     return null;
   }
 }
@@ -65,8 +63,7 @@ builder.defineSubtitlesHandler(async ({ id }) => {
   if (cached) {
     return { subtitles: cached };
   }
-
-  const greekUrl = await fetchGreekFromSubseeker(id);
+  let greekUrl = await fetchGreekFromSubseeker(id);
   if (greekUrl) {
     subs.push({ lang: 'el', url: greekUrl, id: 'val-greek-original', name: 'Greek (Original)' });
   } else {
@@ -76,7 +73,6 @@ builder.defineSubtitlesHandler(async ({ id }) => {
       subs.push({ lang: 'el', url: eng, id: 'val-greek-auto', name: 'Greek (Auto-translated)' });
     }
   }
-
   cache.set(id, subs);
   return {
     subtitles: subs,
@@ -84,6 +80,6 @@ builder.defineSubtitlesHandler(async ({ id }) => {
   };
 });
 
-module.exports = async (req, res) => {
-  return serveHTTP(builder.getInterface())(req, res);
+module.exports = (req, res) => {
+  builder.getInterface()(req, res);
 };
