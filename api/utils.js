@@ -1,5 +1,5 @@
+import * as cheerio from 'cheerio';
 import axios from 'axios';
-import cheerio from 'cheerio';
 import translate from '@vitalets/google-translate-api';
 import NodeCache from 'node-cache';
 
