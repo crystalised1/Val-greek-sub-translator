@@ -1,11 +1,11 @@
-const express = require('express');
 const { addonBuilder } = require('stremio-addon-sdk');
 const axios = require('axios');
 const cheerio = require('cheerio');
 const translate = require('@vitalets/google-translate-api');
 const NodeCache = require('node-cache');
 
-const app = express();
+const subsCache = new NodeCache({ stdTTL: 3600 });
+const translatedCache = new NodeCache({ stdTTL: 3600 });
 
 const builder = new addonBuilder({
   id: 'org.val.greeksubs',
@@ -20,9 +20,6 @@ const builder = new addonBuilder({
   catalogs: [],
   behaviorHints: { configurationRequired: false }
 });
-
-const subsCache = new NodeCache({ stdTTL: 3600 });
-const translatedCache = new NodeCache({ stdTTL: 3600 });
 
 async function fetchSubseekerSubs(imdbId, lang) {
   try {
@@ -98,7 +95,7 @@ builder.defineSubtitlesHandler(async ({ id }) => {
     translatedCache.set(id, translatedSrt);
   }
 
-  const translatedUrl = `http://localhost:${process.env.PORT || 7000}/translated/${id}.srt`;
+  const translatedUrl = `https://${process.env.VERCEL_URL || "val-greek-sub-translator.vercel.app"}/api/addon.js/subtitles/${id}.srt`;
 
   subs.push({ id: 'el-auto', lang: 'el', name: 'Greek (Auto-translated)', url: translatedUrl });
   subsCache.set(id, subs);
@@ -106,30 +103,28 @@ builder.defineSubtitlesHandler(async ({ id }) => {
   return { subtitles: subs };
 });
 
-app.use((req, res, next) => {
+module.exports = async (req, res) => {
+  const url = req.url;
+
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
-});
 
-app.get('/manifest.json', (req, res) => {
-  res.json(builder.getManifest());
-});
-
-app.get('/subtitles/:id.srt', (req, res) => {
-  const id = req.params.id;
-  const srt = translatedCache.get(id);
-  if (srt) {
-    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-    res.status(200).send(srt);
+  if (url === '/manifest.json') {
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(builder.getManifest()));
+  } else if (url.startsWith('/subtitles/') && url.endsWith('.srt')) {
+    const id = url.split('/')[2].replace('.srt', '');
+    const srt = translatedCache.get(id);
+    if (srt) {
+      res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+      res.statusCode = 200;
+      res.end(srt);
+    } else {
+      res.statusCode = 404;
+      res.end('Subtitle not found');
+    }
   } else {
-    res.status(404).send('Subtitle not found');
+    const handler = await builder.getInterface();
+    return handler(req, res);
   }
-});
-
-app.use(builder.getInterface());
-
-const port = process.env.PORT || 7000;
-app.listen(port, () => {
-  console.log(`Addon server running at http://localhost:${port}`);
-});
+};
