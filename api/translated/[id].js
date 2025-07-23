@@ -1,6 +1,7 @@
 import { fetchSubseekerSubs, downloadSrt, translateSrtContent, subsCache, translatedCache } from '../utils.js';
 
 
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
 
