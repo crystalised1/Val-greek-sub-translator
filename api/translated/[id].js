@@ -2,7 +2,6 @@ import {
   fetchSubseekerSubs,
   downloadSrt,
   translateSrtContent,
-  subsCache,
   translatedCache
 } from '../utils.js';
 
@@ -16,25 +15,26 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Check cache first
+    // Check cache
     const cached = translatedCache.get(id);
     if (cached) {
+      res.setHeader('Content-Type', 'text/plain; charset=utf-8');
       return res.status(200).send(cached);
     }
 
-    // Get subtitle link
+    // Fetch subtitle link
     const subUrl = await fetchSubseekerSubs(id, 'english');
     if (!subUrl) {
       return res.status(404).json({ error: 'No subtitles found' });
     }
 
-    // Download .srt content
+    // Download SRT file
     const srtContent = await downloadSrt(subUrl);
     if (!srtContent) {
       return res.status(500).json({ error: 'Failed to download subtitle file' });
     }
 
-    // Translate content
+    // Translate SRT content
     const translated = await translateSrtContent(srtContent);
 
     // Cache it
@@ -42,6 +42,7 @@ export default async function handler(req, res) {
 
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
     return res.status(200).send(translated);
+
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: 'Server error' });
