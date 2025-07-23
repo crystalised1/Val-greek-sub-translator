@@ -1,0 +1,62 @@
+const axios = require('axios');
+const cheerio = require('cheerio');
+const translate = require('@vitalets/google-translate-api');
+const NodeCache = require('node-cache');
+
+const subsCache = new NodeCache({ stdTTL: 3600 });
+const translatedCache = new NodeCache({ stdTTL: 3600 });
+
+async function fetchSubseekerSubs(imdbId, lang) {
+  try {
+    const url = `https://www.subseeker.com/movie/${imdbId}`;
+    const { data } = await axios.get(url);
+    const $ = cheerio.load(data);
+    let links = [];
+    $('a[href$=".srt"]').each((i, el) => {
+      const subtitleLang = $(el).closest('tr').find('img[alt]').attr('alt');
+      if (subtitleLang && subtitleLang.toLowerCase().includes(lang)) {
+        links.push($(el).attr('href'));
+      }
+    });
+    return links.length ? links[0] : null;
+  } catch {
+    return null;
+  }
+}
+
+async function downloadSrt(url) {
+  try {
+    const { data } = await axios.get(url);
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+async function translateSrtContent(srtContent) {
+  const lines = srtContent.split('\n');
+  const translatedLines = [];
+
+  for (const line of lines) {
+    if (/^\d+$/.test(line) || /-->/g.test(line) || line.trim() === '') {
+      translatedLines.push(line);
+    } else {
+      try {
+        const res = await translate(line, { to: 'el' });
+        translatedLines.push(res.text);
+      } catch {
+        translatedLines.push(line);
+      }
+    }
+  }
+
+  return translatedLines.join('\n');
+}
+
+module.exports = {
+  subsCache,
+  translatedCache,
+  fetchSubseekerSubs,
+  downloadSrt,
+  translateSrtContent
+};

@@ -1,17 +1,13 @@
 {
   "name": "val-greek-sub-translator",
   "version": "1.0.0",
-  "description": "Stremio addon για ελληνικούς υπότιτλους με μετάφραση",
-  "main": "api/addon.js",
-  "scripts": {
-    "start": "node api/addon.js"
-  },
+  "main": "index.js",
+  "type": "commonjs",
   "dependencies": {
-    "@vitalets/google-translate-api": "^9.2.1",
     "axios": "^1.6.8",
     "cheerio": "^1.0.0-rc.12",
-    "express": "^4.19.2",
     "node-cache": "^5.1.2",
-    "stremio-addon-sdk": "^1.6.10"
+    "stremio-addon-sdk": "^1.6.10",
+    "@vitalets/google-translate-api": "^9.2.1"
   }
 }

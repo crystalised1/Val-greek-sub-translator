@@ -1,15 +1,11 @@
 {
   "version": 2,
   "builds": [
-    {
-      "src": "api/addon.js",
-      "use": "@vercel/node"
-    }
+    { "src": "api/**/*.js", "use": "@vercel/node" }
   ],
   "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/api/addon.js"
-    }
+    { "src": "/manifest.json", "dest": "/api/manifest.js" },
+    { "src": "/subtitles/(.*)", "dest": "/api/subtitles.js" },
+    { "src": "/translated/(.*)", "dest": "/api/translated/[id].js" }
   ]
 }
